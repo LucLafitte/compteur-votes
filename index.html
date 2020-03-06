@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vote</title>
+</head>
+<body>
+    <form action="">
+        <label for="Antoine">A</label>
+        <input type="radio" name="vote" value="Antoine" id="Antoine">
+        <label for="Leonie">L</label>
+        <input type="radio" name="vote" value="Leonie" id="Leonie">
+        <label for="Soraya">S</label>
+        <input type="radio" name="vote" value="Soraya" id="Soraya">
+        <label for="Maxime">M</label>
+        <input type="radio" name="vote" value="Maxime" id="Maxime">
+    </form>
+    <br>
+
+    <div id="AntoineVote"></div> <!-- Afichage du score -->
+    <div id="LeonieVote"></div> <!-- Afichage du score -->
+    <div id="SorayaVote"></div> <!-- Afichage du score -->
+    <div id="MaximeVote"></div> <!-- Afichage du score -->
+    <div id="nbConnectes"></div> <!-- Afichage de personnes connectées -->
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+        var socket = io();
+            $("input[type=radio][name=vote]").click(function () {
+                console.log($(this).val())
+                socket.emit('vote', $(this).val()); // émission emit envoie le index js au serveur (event vote)
+                // changement css des boutons
+                $(`label`).css("opacity", ".2")
+                $("input").attr("disabled", "true")
+                $(`label[for=${this.value}]`).css("opacity", "1")
+            })
+
+            socket.on("oui", function(antoineVote){
+                //console.log(antoineVote); // Ca fonctionne, on récupère la variable.
+                document.getElementById("AntoineVote").innerHTML = antoineVote;
+            })
+            socket.on("oui1", function(leonieVote){
+                //console.log(leonieVote); // Ca fonctionne, on récupère la variable.
+                document.getElementById("LeonieVote").innerHTML = leonieVote;
+            })
+            socket.on("oui2", function(sorayaVote){
+                //console.log(SorayaVote); // Ca fonctionne, on récupère la variable.
+                document.getElementById("SorayaVote").innerHTML = sorayaVote;
+            })
+            socket.on("oui3", function(maximeVote){
+                //console.log(maximeVote); // Ca fonctionne, on récupère la variable.
+                document.getElementById("MaximeVote").innerHTML = maximeVote;
+            })
+            socket.on("jeSuisConnecte", function(nombreCo){
+                document.getElementById("nbConnectes").innerHTML = nombreCo; // On actualise le nombre de personnes connectés augmente
+            })
+            socket.on("jeSuisDeconnecte", function(nombreCo){
+                document.getElementById("nbConnectes").innerHTML = nombreCo; //On actualise le nombre de personnes connectés baisse
+            })
+    </script>
+</body>
+</body>
+</html>
